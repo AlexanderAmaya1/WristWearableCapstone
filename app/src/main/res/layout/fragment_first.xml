@@ -10,7 +10,7 @@
         android:id="@+id/textview_first"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="356dp"
         android:background="#00FF0000"
         android:text="@string/no_video"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,11 +24,12 @@
         android:layout_marginBottom="4dp"
         android:background="@color/recording_red"
         android:clickable="true"
+        android:onClick="record_button_listener"
         android:src="@android:drawable/ic_notification_overlay"
         app:backgroundTint="@color/recording_red"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/video_button"
-        app:layout_constraintStart_toEndOf="@+id/floatingActionButton3"
+        app:layout_constraintStart_toEndOf="@+id/stream_button"
         app:rippleColor="#FFFFFF"
         tools:ignore="SpeakableTextPresentCheck" />
 
@@ -46,11 +47,12 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton3"
+        android:id="@+id/stream_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:clickable="true"
+        android:onClick="stream_button_listener"
         android:src="@android:drawable/ic_menu_camera"
         app:backgroundTint="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -59,16 +61,14 @@
 
     <SurfaceView
         android:id="@+id/streamView"
-        android:layout_width="341dp"
-        android:layout_height="574dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/record_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.496" />
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

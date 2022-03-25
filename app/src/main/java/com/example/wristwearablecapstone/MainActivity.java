@@ -23,22 +23,28 @@ import com.example.wristwearablecapstone.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.opencv.android.OpenCVLoader;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener{
+public class MainActivity extends AppCompatActivity{
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
 
-    private SurfaceView surfaceView;
-    private MediaPlayer mediaPlayer;
-    private SurfaceHolder surfaceHolder;
-    private static final String STREAM_PATH = "rtsp://192.168.0.157/live.mjpeg";
-    private static final String TEST_STREAM_PATH = "https://www.youtube.com/watch?v=mT8fBXSjbfI";
+    private SurfaceView streamElement;
+    private MediaPlayer streamPlayer;
+    private SurfaceHolder streamHolder;
+    private static final String STREAM_PATH = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4"; //"rtsp://192.168.0.157/live.mjpeg";
+
+    private boolean stream_on = false;
+    private TextView status;
+    private Toast status_toast;
 
     private static String TAG = "MainActivity";
 
@@ -65,10 +71,22 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        surfaceView = (SurfaceView) findViewById(R.id.streamView);
-        surfaceHolder = surfaceView.getHolder();
-        surfaceHolder.addCallback(MainActivity.this);
 
+        //Sets up the streaming elements
+        streamElement = findViewById(R.id.streamView);
+        streamHolder = streamElement.getHolder();
+
+
+//        try {
+//            streamPlayer.setDataSource(STREAM_PATH);
+//        }catch (IOException e){
+//            e.printStackTrace();
+//        }
+
+
+        streamElement.setVisibility(View.INVISIBLE);
+
+        status = findViewById(R.id.textview_first);
     }
 
     @Override
@@ -77,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -104,40 +123,54 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-    @Override
-    public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
-        //media player
-        System.out.println("Surface Created");
-        MediaPlayer mediaPlayer = new MediaPlayer();
 
-        try {
+    //Click listener for the stream button
+    public void stream_button_listener(View view){
 
-            mediaPlayer.setDataSource(STREAM_PATH);
-            mediaPlayer.prepare();
-            mediaPlayer.setOnPreparedListener(MainActivity.this);
+        if(stream_on){
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            stream_on = false;
+            status_toast.makeText(getApplicationContext(), "Stopping Stream", Toast.LENGTH_SHORT).show();
+
+
+            if(streamPlayer != null && streamPlayer.isPlaying()){
+                //Stops the stream
+                streamPlayer.stop();
+                //Deletes and releases the streamPlayer
+                streamPlayer.release();
+                streamElement.setVisibility(View.INVISIBLE);
+            }
+
+
+        }else{
+
+            stream_on = true;
+            streamElement.setVisibility(View.VISIBLE);
+            status_toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_LONG).show();
+
+            try {
+
+                streamPlayer = new MediaPlayer();
+                streamPlayer.setDataSource(STREAM_PATH);
+                streamPlayer.prepare();
+                streamPlayer.start();
+                streamPlayer.setDisplay(streamHolder);
+
+                status_toast.makeText(getApplicationContext(), "Stream Connected", Toast.LENGTH_SHORT).show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
         }
 
-        //mediaPlayer.start();
-       // mediaPlayer.setDisplay(binding.streamView.getHolder());
     }
 
-    @Override
-    public void surfaceChanged(@NonNull SurfaceHolder surfaceHolder, int i, int i1, int i2) {
 
-    }
+    public void record_button_listener(View view){
 
-    @Override
-    public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
 
-    }
-
-    @Override
-    public void onPrepared(MediaPlayer mediaPlayer) {
-        mediaPlayer.start();
-        mediaPlayer.setDisplay(surfaceHolder);
     }
 
 }

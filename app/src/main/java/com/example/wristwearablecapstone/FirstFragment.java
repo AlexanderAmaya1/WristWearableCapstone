@@ -51,12 +51,6 @@ public class FirstFragment extends Fragment {
             }
         });
 
-        binding.recordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
 
 
 
