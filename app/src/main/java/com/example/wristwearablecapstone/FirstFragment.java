@@ -46,8 +46,13 @@ public class FirstFragment extends Fragment {
         binding.videoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                ((MainActivity)getActivity()).video_button_press();
+
+               //NavHostFragment.findNavController(FirstFragment.this)
+               //         .navigate(R.id.action_FirstFragment_to_SecondFragment);
+
+
+
             }
         });
 

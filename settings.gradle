@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "WristWearableCapstone"
 include ':app'
 include ':openCV'
+include ':sample'
