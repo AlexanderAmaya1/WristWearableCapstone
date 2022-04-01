@@ -17,8 +17,6 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.wristwearablecapstone.databinding.FragmentFirstBinding;
 
-import org.opencv.video.Video;
-
 import java.io.IOException;
 
 public class FirstFragment extends Fragment {

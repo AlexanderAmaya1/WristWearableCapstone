@@ -40,7 +40,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.opencv.android.OpenCVLoader;
 import org.w3c.dom.Text;
 
 import java.io.File;
