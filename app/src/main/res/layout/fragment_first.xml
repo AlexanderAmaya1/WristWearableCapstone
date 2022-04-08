@@ -29,19 +29,20 @@
         android:src="@android:drawable/ic_notification_overlay"
         app:backgroundTint="@color/recording_red"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/video_button"
+        app:layout_constraintEnd_toStartOf="@+id/settings_button"
         app:layout_constraintStart_toEndOf="@+id/stream_button"
         app:rippleColor="#FFFFFF"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/video_button"
+        android:id="@+id/settings_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
         android:clickable="true"
-        android:src="@android:drawable/ic_menu_gallery"
+        android:onClick="settings_button_listener"
+        android:src="@android:drawable/ic_menu_preferences"
         app:backgroundTint="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,18 +66,20 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
+        android:rotation="0"
+        android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/record_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/recording_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:text="00:00"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/record_button"

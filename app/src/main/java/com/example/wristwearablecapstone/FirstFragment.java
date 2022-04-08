@@ -41,16 +41,14 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.videoButton.setOnClickListener(new View.OnClickListener() {
+        binding.recordingTimer.setVisibility(View.INVISIBLE);
+        binding.streamView.setVisibility(View.INVISIBLE);
+
+        binding.settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).video_button_press();
-
-               //NavHostFragment.findNavController(FirstFragment.this)
-               //         .navigate(R.id.action_FirstFragment_to_SecondFragment);
-
-
-
+                NavHostFragment.findNavController(FirstFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_settingsFragment);
             }
         });
 

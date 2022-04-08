@@ -88,11 +88,11 @@ public class MainActivity extends AppCompatActivity{
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
+        //setSupportActionBar(binding.toolbar);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+       // appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+       // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
 
         //Allows http requests on main thread, maybe not secure
@@ -114,40 +114,40 @@ public class MainActivity extends AppCompatActivity{
         status = findViewById(R.id.textview_first);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        NavController navHost = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//
+//            navHost.navigate(R.id.action_FirstFragment_to_settingsFragment);
+//            return true;
+//
+//
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
-        NavController navHost = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-
-            navHost.navigate(R.id.action_FirstFragment_to_settingsFragment);
-            return true;
-
-
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
+//    @Override
+//    public boolean onSupportNavigateUp() {
+//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+//        return NavigationUI.navigateUp(navController, appBarConfiguration)
+//                || super.onSupportNavigateUp();
+//    }
 
     //Click listener for the stream button
     public void stream_button_listener(View view){
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity{
             status_toast.makeText(getApplicationContext(), "Stopping Stream", Toast.LENGTH_SHORT).show();
 
 
-            if(streamPlayer != null && streamPlayer.isPlaying()){
+            if(streamPlayer.isPlaying()){
                 streamElement.setVisibility(View.INVISIBLE);
                 //Stops the stream
                 streamPlayer.stop();
@@ -189,6 +189,7 @@ public class MainActivity extends AppCompatActivity{
                 status_toast.makeText(getApplicationContext(), "Stream Connected", Toast.LENGTH_SHORT).show();
 
             } catch (IOException e) {
+                e.printStackTrace();
                 status_toast.makeText(getApplicationContext(), "Unable to Connect", Toast.LENGTH_SHORT).show();
                 streamElement.setVisibility(View.INVISIBLE);
                 streamPlayer = null;
@@ -201,11 +202,19 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    public void video_button_press(){
+    public void onVisibilityAggregated (boolean isVisible){}
 
-        if(stream_on){
-            stream_button_listener(getCurrentFocus());
+
+    public void screen_return(){
+
+        for(int i = 0; i < 10000; i++){
+
+            timer.setVisibility(View.INVISIBLE);
+
+            streamElement.setVisibility(View.INVISIBLE);
         }
+
+
 
     }
 
