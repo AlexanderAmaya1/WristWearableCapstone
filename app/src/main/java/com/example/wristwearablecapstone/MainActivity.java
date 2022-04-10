@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity{
     private MediaPlayer streamPlayer;
     private SurfaceHolder streamHolder;
     private static final String STREAM_PATH = "rtsp://192.168.42.1/live.mjpeg";//// <- test stream | real stream ->
+    private static String streamPath;
+
     private boolean stream_on = false;
     private TextView status;
     private Toast status_toast;
@@ -304,13 +306,17 @@ public class MainActivity extends AppCompatActivity{
                 }
             });
 
-
-
-
-
-
         }
-
     }
+
+    public static void setStreamPath(String path){
+        streamPath = path;
+        System.out.println(streamPath);
+    }
+    public static String getStreamPath(){
+
+        return streamPath;
+    }
+
 
 }

@@ -5,10 +5,14 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.text.TextWatcher;
+import android.widget.EditText;
 
 import com.example.wristwearablecapstone.databinding.FragmentSettingsBinding;
 
@@ -20,6 +24,7 @@ import com.example.wristwearablecapstone.databinding.FragmentSettingsBinding;
 public class SettingsFragment extends Fragment {
 
     private FragmentSettingsBinding binding;
+    EditText editTextIPAddress;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,12 +64,15 @@ public class SettingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
 
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -86,6 +94,27 @@ public class SettingsFragment extends Fragment {
                 ((MainActivity)getActivity()).screen_return();
             }
         });
+
+        editTextIPAddress = view.findViewById(R.id.editTextIPAddress);
+        editTextIPAddress.setText(MainActivity.getStreamPath());
+        editTextIPAddress.addTextChangedListener(new TextWatcher(){
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s){
+                MainActivity.setStreamPath(s.toString());
+
+            }
+        });
     }
+
 
 }
