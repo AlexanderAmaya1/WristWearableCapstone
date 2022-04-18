@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity{
     private MediaPlayer streamPlayer;
     private SurfaceHolder streamHolder;
     private static final String STREAM_PATH = "rtsp://192.168.42.1/live.mjpeg";//// <- test stream | real stream ->
-    private static String streamPath;
+    private static String streamPath = STREAM_PATH;
 
     private boolean stream_on = false;
     private TextView status;
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity{
             try {
 
                 streamPlayer = new MediaPlayer();
-                streamPlayer.setDataSource(STREAM_PATH);
+                streamPlayer.setDataSource(streamPath);
                 streamPlayer.prepare();
                 streamPlayer.start();
                 streamPlayer.setDisplay(streamHolder);
@@ -309,7 +309,12 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    public static void setStreamPath(String path){
+    public static void setStreamPath(String ip){
+        String path = ip.trim();
+        if(!ip.startsWith("rtsp://"))
+            path = "rtsp://" + ip;
+        if(!ip.endsWith("/live.mjpeg"))
+            path += "/live.mjpeg";
         streamPath = path;
         System.out.println(streamPath);
     }

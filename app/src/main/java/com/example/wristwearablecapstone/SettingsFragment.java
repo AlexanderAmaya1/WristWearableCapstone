@@ -12,8 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.text.TextWatcher;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
+import com.example.wristwearablecapstone.databinding.ActivityMainBinding;
 import com.example.wristwearablecapstone.databinding.FragmentSettingsBinding;
 
 /**
@@ -65,14 +68,12 @@ public class SettingsFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
 
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -100,12 +101,10 @@ public class SettingsFragment extends Fragment {
         editTextIPAddress.addTextChangedListener(new TextWatcher(){
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -114,6 +113,28 @@ public class SettingsFragment extends Fragment {
 
             }
         });
+
+        // Populate resolution dropdown
+        Spinner resDropdown = view.findViewById(R.id.res_dropdown);
+        String[] resItems = {"4K", "1080p", "720p"};
+        ArrayAdapter<String> resAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, resItems);
+        resDropdown.setAdapter(resAdapter);
+        resDropdown.setSelection(1);
+
+        // populate framerate dropdown
+        Spinner fpsDropdown = view.findViewById(R.id.fps_dropdown);
+        String[] fpsItems = {"120", "100", "60", "50", "30", "25", "24"};
+        ArrayAdapter<String> fpsAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, fpsItems);
+        fpsDropdown.setAdapter(fpsAdapter);
+        fpsDropdown.setSelection(2);
+
+
+        // populate bitrate dropdown
+        Spinner bitDropdown = view.findViewById(R.id.bit_dropdown);
+        String[] bitItems = {"8 Mbps", "4 Mbps", "2 Mbps"};
+        ArrayAdapter<String> bitAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, bitItems);
+        bitDropdown.setAdapter(bitAdapter);
+        bitDropdown.setSelection(0);
     }
 
 
