@@ -5,11 +5,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.text.TextWatcher;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 
+import com.example.wristwearablecapstone.databinding.ActivityMainBinding;
 import com.example.wristwearablecapstone.databinding.FragmentSettingsBinding;
 
 /**
@@ -19,7 +27,8 @@ import com.example.wristwearablecapstone.databinding.FragmentSettingsBinding;
  */
 public class SettingsFragment extends Fragment {
 
-    private FragmentSettingsBinding binding;
+    private static FragmentSettingsBinding binding;
+    EditText editTextIPAddress;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,6 +38,8 @@ public class SettingsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private static boolean enableSettings;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -59,6 +70,7 @@ public class SettingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -75,17 +87,130 @@ public class SettingsFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        enableSettings = true;
 
         binding.settingsBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).screen_return();
-                NavHostFragment.findNavController(SettingsFragment.this)
-                        .navigate(R.id.action_settingsFragment_to_FirstFragment);
+                if(enableSettings) {
+                    ((MainActivity) getActivity()).screen_return();
+                    NavHostFragment.findNavController(SettingsFragment.this)
+                            .navigate(R.id.action_settingsFragment_to_FirstFragment);
 
-                ((MainActivity)getActivity()).screen_return();
+                    ((MainActivity) getActivity()).screen_return();
+                }
             }
         });
+
+
+        binding.editTextIPAddress.setText(MainActivity.getStreamIP());
+        binding.editTextIPAddress.addTextChangedListener(new TextWatcher(){
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s){
+                if(!MainActivity.getStreamOn())
+                    MainActivity.setStreamPath(s.toString());
+            }
+        });
+
+        // Populate resolution dropdown
+        //Spinner resDropdown = view.findViewById(R.id.res_dropdown);
+        String[] resItems = {"4K", "1080p", "720p"};
+        ArrayAdapter<String> resAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, resItems);
+        binding.resDropdown.setAdapter(resAdapter);
+        binding.resDropdown.setSelection(1);
+        binding.resDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(MainActivity.getStreamOn()) {
+                    String text = parent.getItemAtPosition(position).toString();
+                    String command = "";
+                    switch(text){
+                        case "4K":
+                            command = "stream_res=0";
+                            break;
+                        case "1080p":
+                            command = "stream_res=3";
+                            break;
+                        case "720p":
+                            command = "stream_res=4";
+                            break;
+                    }
+                    MainActivity.httpCommand(command);
+                }
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
+
+        // populate framerate dropdown
+        //Spinner fpsDropdown = view.findViewById(R.id.fps_dropdown);
+        String[] fpsItems = {"120", "100", "60", "50", "30", "25", "24"};
+        ArrayAdapter<String> fpsAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, fpsItems);
+        binding.fpsDropdown.setAdapter(fpsAdapter);
+        binding.fpsDropdown.setSelection(2);
+        binding.fpsDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(MainActivity.getStreamOn()) {
+                    String text = parent.getItemAtPosition(position).toString();
+                    String command = "stream_framerate=" + text;
+                    MainActivity.httpCommand(command);
+                }
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
+        // populate bitrate dropdown
+        //Spinner bitDropdown = view.findViewById(R.id.bit_dropdown);
+        String[] bitItems = {"8 Mbps", "4 Mbps", "2 Mbps"};
+        ArrayAdapter<String> bitAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, bitItems);
+        binding.bitDropdown.setAdapter(bitAdapter);
+        binding.bitDropdown.setSelection(0);
+        binding.bitDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(MainActivity.getStreamOn()) {
+                    String text = parent.getItemAtPosition(position).toString();
+                    String command = "";
+                    switch(text){
+                        case "8 Mbps":
+                            command = "stream_bitrate=8000000";
+                            break;
+                        case "4 Mbps":
+                            command = "stream_bitrate=4000000";
+                            break;
+                        case "2 Mbps":
+                            command = "stream_bitrate=2000000";
+                            break;
+                    }
+                    MainActivity.httpCommand(command);
+                }
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+    }
+
+    public static void setEnableSettings(boolean set){
+        enableSettings = set;
+        binding.settingsBackButton.setClickable(set);
+        binding.resDropdown.setClickable(set);
+        binding.fpsDropdown.setClickable(set);
+        binding.bitDropdown.setClickable(set);
+
     }
 
 }

@@ -1,16 +1,19 @@
 package com.example.wristwearablecapstone;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
-
 
 
 import androidx.annotation.NonNull;
@@ -26,6 +29,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -47,24 +51,27 @@ import java.io.IOException;
 import java.net.*;
 import java.time.*;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    private static Context context;
 
     //Variables for streaming the camera feed
     private SurfaceView streamElement;
     private MediaPlayer streamPlayer;
     private SurfaceHolder streamHolder;
     private static final String STREAM_PATH = "rtsp://192.168.42.1/live.mjpeg";//// <- test stream | real stream ->
-    private boolean stream_on = false;
+    private static String streamPath = STREAM_PATH;
+
+    private static boolean stream_on = false;
     private TextView status;
-    private Toast status_toast;
+    private static Toast status_toast;
 
     //Variables for remote camera control
-    private String basis_control_url = "http://192.168.42.1/cgi-bin/foream_remote_control?";
-    private URL remote_control;
-    private HttpURLConnection camera_connection;
+    private final static String basis_control_url = "http://192.168.42.1/cgi-bin/foream_remote_control?";
+    private static URL remote_control;
+    private static HttpURLConnection camera_connection;
 
     //Variables for recording timer
     private Long start_time;
@@ -73,17 +80,45 @@ public class MainActivity extends AppCompatActivity{
 
     //Variables for recording functionality
     private boolean recording = false;
-    private  String video_path;
+    private String video_path;
 
     private MediaRecorder recorder;
 
     private static String TAG = "Recorder";
 
+    // request the correct wifi
+    /*private static String networkSSID = "GHOST 4K+-90257";
+    private static String networkPass = "1234567890";
+    private static WifiConfiguration wifiConfig;*/
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getApplicationContext();
+
+        // add wifi network for the camera
+        /*wifiConfig = new WifiConfiguration();
+        wifiConfig.SSID = String.format("\"%s\"", networkSSID);
+        wifiConfig.preSharedKey = String.format("\"%s\"", networkPass);
+        wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+        wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+        wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+        wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+        wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+        wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+        wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+        wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+        wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(context.WIFI_SERVICE);
+        //remember id
+        int netId = wifiManager.addNetwork(wifiConfig);
+        wifiManager.disconnect();
+        wifiManager.enableNetwork(netId, true);
+        wifiManager.reconnect();
+        */
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -180,7 +215,7 @@ public class MainActivity extends AppCompatActivity{
             try {
 
                 streamPlayer = new MediaPlayer();
-                streamPlayer.setDataSource(STREAM_PATH);
+                streamPlayer.setDataSource(streamPath);
                 streamPlayer.prepare();
                 streamPlayer.start();
                 streamPlayer.setDisplay(streamHolder);
@@ -304,13 +339,48 @@ public class MainActivity extends AppCompatActivity{
                 }
             });
 
+        }
+    }
+    public static boolean getStreamOn(){
+        return stream_on;
+    }
 
+    public static void setStreamPath(String ip){
+        String path = ip.trim();
+        if(!ip.startsWith("rtsp://"))
+            path = "rtsp://" + ip;
+        if(!ip.endsWith("/live.mjpeg"))
+            path += "/live.mjpeg";
+        streamPath = path;
+        System.out.println(streamPath);
+    }
+    public static String getStreamPath(){
+        return streamPath;
+    }
+    public static String getStreamIP(){
 
+        return streamPath.substring(7, streamPath.length() - 10);
+    }
+    public static void httpCommand(String command){
+        SettingsFragment.setEnableSettings(false);
+        try{
+            remote_control = new URL(basis_control_url + command);
+            camera_connection = (HttpURLConnection) remote_control.openConnection();
+            camera_connection.setRequestMethod("POST");
+            camera_connection.getInputStream();
+            camera_connection.disconnect();
 
+        }catch(Exception e){
 
+            displayToast("HTTP Command to camera failed");
+            e.printStackTrace();
 
         }
-
+        SettingsFragment.setEnableSettings(true);
     }
+    public static void displayToast(String message){
+        status_toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
 
 }

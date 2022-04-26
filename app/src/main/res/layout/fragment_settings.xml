@@ -7,15 +7,47 @@
     android:layout_height="match_parent"
     tools:context=".SettingsFragment">
 
+    <Spinner
+        android:id="@+id/bit_dropdown"
+        android:layout_width="211dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="164dp"
+        android:layout_marginEnd="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextIPAddress" />
+
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textBirate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settings"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Bitrate:"
+        app:layout_constraintBottom_toTopOf="@+id/settings_back_button"
+        app:layout_constraintEnd_toStartOf="@+id/bit_dropdown"
+        app:layout_constraintHorizontal_bias="0.401"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textFramerate"
+        app:layout_constraintVertical_bias="0.291" />
+
+    <Spinner
+        android:id="@+id/fps_dropdown"
+        android:layout_width="211dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextIPAddress" />
+
+    <TextView
+        android:id="@+id/textFramerate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Framerate:"
+        app:layout_constraintBottom_toTopOf="@+id/settings_back_button"
+        app:layout_constraintEnd_toStartOf="@+id/fps_dropdown"
+        app:layout_constraintHorizontal_bias="0.357"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textResolution"
+        app:layout_constraintVertical_bias="0.241" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/settings_back_button"
@@ -28,5 +60,49 @@
         app:backgroundTint="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textIP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:text="IP Address:"
+        app:layout_constraintBottom_toTopOf="@+id/settings_back_button"
+        app:layout_constraintEnd_toStartOf="@+id/editTextIPAddress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textResolution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resolution:"
+        app:layout_constraintBottom_toTopOf="@+id/settings_back_button"
+        app:layout_constraintEnd_toStartOf="@+id/res_dropdown"
+        app:layout_constraintHorizontal_bias="0.304"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textIP"
+        app:layout_constraintVertical_bias="0.222" />
+
+    <EditText
+        android:id="@+id/editTextIPAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="52dp"
+        android:ems="10"
+        android:inputType="textUri"
+        app:layout_constraintBottom_toTopOf="@+id/settings_back_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.503" />
+
+    <Spinner
+        android:id="@+id/res_dropdown"
+        android:layout_width="211dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/fps_dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextIPAddress" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
